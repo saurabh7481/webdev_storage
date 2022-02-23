@@ -11,7 +11,7 @@ function saveData(e){
         name: name,
         email: email
     }
-    localStorage.setItem("user@"+name, JSON.stringify(obj));
+    localStorage.setItem(email, JSON.stringify(obj));
 }
 
 function showData(e){
@@ -23,13 +23,35 @@ function showData(e){
         }
         const ul = document.getElementById("users");
         users.forEach(user => {
-            console.log(user)
-            const li = document.createElement("li");
-            li.className = "item";
-    
-            li.appendChild(document.createTextNode(`${user.name} : ${user.email}`));
-            ul.appendChild(li);
+            const newUser = `<li id=${user.email}>${user.name} : ${user.email}
+                                <button onclick=deleteUser('${user.email}')> Delete</button>
+                                <button onclick=EditUser('${user.email}')> Edit</button>
+                            </li>`
+
+            ul.innerHTML = ul.innerHTML + newUser;
         })
     }
     
+}
+
+function deleteUser(email){
+    localStorage.removeItem(email);
+    removeFromUI(email);
+}
+
+function removeFromUI(email){
+    const parent = document.getElementById("users");
+    const toBeDeleted = document.getElementById(email);
+    parent.removeChild(toBeDeleted);
+}
+
+function EditUser(email){
+    const user =  JSON.parse(localStorage.getItem(email));
+    const nameInput = document.getElementById("name");
+    nameInput.value = user.name;
+
+    const emailInput = document.getElementById("email");
+    emailInput.value = user.email;
+
+    removeFromUI(email);
 }
