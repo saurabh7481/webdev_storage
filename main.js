@@ -5,14 +5,21 @@ const form = document.getElementById("my-form");
 form.addEventListener("submit", saveData);
 
 function saveData(e){
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
     const obj = {
         name: name,
         email: email
     }
-    localStorage.setItem(email, JSON.stringify(obj));
-}
+//     localStorage.setItem(email, JSON.stringify(obj));
+    axios.post('https://crudcrud.com/api/420fba99ab8f4462b7f8cbc31fb55d7c/appointments', obj)
+        .then((res) => {
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        })
+ }
 
 function showData(e){
     if(localStorage.length){
@@ -55,3 +62,4 @@ function EditUser(email){
 
     removeFromUI(email);
 }
+
