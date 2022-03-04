@@ -15,7 +15,9 @@ function saveData(e){
 //     localStorage.setItem(email, JSON.stringify(obj));
     axios.post('https://crudcrud.com/api/420fba99ab8f4462b7f8cbc31fb55d7c/appointments', obj)
         .then((res) => {
-            console.log(res);
+            console.log(res.data);
+            document.getElementById("name").value = "";
+            document.getElementById("email") = "";
         }).catch(err => {
             console.log(err);
         })
@@ -26,9 +28,9 @@ function showData(e){
         .then(res => {
             const ul = document.getElementById("users");
             res.data.forEach(el => {
-                const newUser = `<li id=${el.email}>${el.name} : ${el.email}
-                                    <button onclick=deleteUser('${el.email}')> Delete</button>
-                                    <button onclick=EditUser('${el.email}')> Edit</button>
+                const newUser = `<li id=${el._id}>${el.name} : ${el.email}
+                                    <button onclick=deleteUser('${el._id}')> Delete</button>
+                                    <button onclick=EditUser('${el._id}')> Edit</button>
                                 </li>`
 
                 ul.innerHTML = ul.innerHTML + newUser;
@@ -56,14 +58,25 @@ function showData(e){
     
 }
 
-function deleteUser(email){
-    localStorage.removeItem(email);
-    removeFromUI(email);
+function deleteUser(_id){
+    axios.delete(`https://crudcrud.com/api/420fba99ab8f4462b7f8cbc31fb55d7c/appointments/${_id}`)
+        .then(() => {
+            console.log("Deleted!");
+            removeFromUI(_id);
+
+        })  
+        .catch(err => {
+            console.log(err);
+        })
+
+
+    // localStorage.removeItem(email);
+    // removeFromUI(email);
 }
 
-function removeFromUI(email){
+function removeFromUI(id){
     const parent = document.getElementById("users");
-    const toBeDeleted = document.getElementById(email);
+    const toBeDeleted = document.getElementById(id);
     parent.removeChild(toBeDeleted);
 }
 
