@@ -23,14 +23,14 @@ function saveData(e){
         })
  }
 
-function showData(e){
+function showData(){
     axios.get("https://crudcrud.com/api/420fba99ab8f4462b7f8cbc31fb55d7c/appointments")
         .then(res => {
             const ul = document.getElementById("users");
             res.data.forEach(el => {
                 const newUser = `<li id=${el._id}>${el.name} : ${el.email}
                                     <button onclick=deleteUser('${el._id}')> Delete</button>
-                                    <button onclick=EditUser('${el._id}')> Edit</button>
+                                    <button onclick=EditUser('${el}')> Edit</button>
                                 </li>`
 
                 ul.innerHTML = ul.innerHTML + newUser;
@@ -80,14 +80,26 @@ function removeFromUI(id){
     parent.removeChild(toBeDeleted);
 }
 
-function EditUser(email){
-    const user =  JSON.parse(localStorage.getItem(email));
+function EditUser(el){
+    // const user =  JSON.parse(localStorage.getItem(email));
     const nameInput = document.getElementById("name");
-    nameInput.value = user.name;
-
+    nameInput.value = el.name;
     const emailInput = document.getElementById("email");
-    emailInput.value = user.email;
+    emailInput.value = el.email;
 
-    removeFromUI(email);
+    removeFromUI(el._id);
+
+    document.getElementById("btn").addEventListener("click", (e) => {
+        const obj = {
+            name: nameInput.value,
+            email: nameInput.value
+        }
+        console.log(obj);
+
+        axios.put(`https://crudcrud.com/api/420fba99ab8f4462b7f8cbc31fb55d7c/appointments/${el._id}`)
+            .then(() => showData())
+            .catch(err => console.log(err));
+
+    })
 }
 
